@@ -1,0 +1,28 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): UserModel!
+}
+
+type Query {
+  findAllUsers: [UserModel!]!
+}
+
+type UserModel {
+  avatar: String
+  bio: String
+  createdAt: String!
+  displayName: String!
+  email: String!
+  id: String!
+  password: String!
+  updatedAt: String
+}
