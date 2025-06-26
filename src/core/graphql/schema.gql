@@ -25,4 +25,5 @@ type UserModel {
   id: String!
   password: String!
   updatedAt: String
+  username: String!
 }
