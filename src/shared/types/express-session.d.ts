@@ -6,3 +6,10 @@ declare module 'express-session' {
     createdAt?: Date | string;
   }
 }
+
+// declare module 'express' {
+//   interface Request {
+//     session: import('express-session').Session &
+//       Partial<import('express-session').SessionData>;
+//   }
+// }
