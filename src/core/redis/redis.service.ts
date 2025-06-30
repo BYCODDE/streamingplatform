@@ -8,4 +8,3 @@ export class RedisService extends Redis {
     super(configService.getOrThrow<string>('REDIS_URI'));
   }
 }
-  
