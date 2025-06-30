@@ -9,7 +9,7 @@ input CreateUserInput {
 }
 
 type Mutation {
-  createUser(data: CreateUserInput!): UserModel!
+  createUser(data: CreateUserInput!): Boolean!
 }
 
 type Query {
