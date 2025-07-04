@@ -54,6 +54,7 @@ export class SessionService {
             ),
           );
         }
+
         resolve(user);
       });
     });
@@ -70,7 +71,9 @@ export class SessionService {
           );
         }
 
-        res.clearCookie(this.configService.getOrThrow<string>('SESSION_NAME'));
+        req.res?.clearCookie(
+          this.configService.getOrThrow<string>('SESSION_NAME'),
+        );
         resolve(true);
       });
     });
