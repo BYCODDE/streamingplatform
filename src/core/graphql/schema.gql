@@ -8,19 +8,49 @@ input CreateUserInput {
   username: String!
 }
 
+type DeviceModel {
+  browser: String!
+  os: String!
+  type: String!
+}
+
+type LocationModel {
+  city: String!
+  country: String!
+  latitude: Float!
+  longitude: Float!
+}
+
 input LoginInput {
   login: String!
   password: String!
 }
 
 type Mutation {
+  clearSessionCookie: Boolean!
   createUser(data: CreateUserInput!): Boolean!
   loginUser(data: LoginInput!): UserModel!
   logoutUser: Boolean!
+  removeSession(id: String!): Boolean!
 }
 
 type Query {
-  findAllUsers: [UserModel!]!
+  findCurrentSession: SessionModel!
+  findProfile: UserModel!
+  findSessionsbyUser: [SessionModel!]!
+}
+
+type SessionMetadataModel {
+  device: DeviceModel!
+  ip: String!
+  location: LocationModel!
+}
+
+type SessionModel {
+  createdAt: String!
+  id: ID!
+  metadata: SessionMetadataModel!
+  userId: String!
 }
 
 type UserModel {
