@@ -2,7 +2,6 @@ import { PrismaService } from 'src/core/prisma/prisma.service';
 import {
   Injectable,
   ConflictException,
-  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,6 +11,8 @@ import { type Request, type Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { getSessionMetadata } from 'src/shared/utils/session-metadata.util';
 import { RedisService } from 'src/core/redis/redis.service';
+import { destroySession, saveSession } from 'src/shared/utils/session.util';
+import { VerificationService } from '../verification/verification.service';
 
 @Injectable()
 export class SessionService {
@@ -19,6 +20,7 @@ export class SessionService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
+    private readonly verificationService: VerificationService,
   ) {}
 
   public async findByUser(req: Request) {
@@ -98,43 +100,17 @@ export class SessionService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    if (!user.isEmailVerified) {
+      await this.verificationService.sendVerificationEmail(user);
+    }
+
     const sessionMetadata = getSessionMetadata(req, userAgent);
 
-    return await new Promise((resolve, reject) => {
-      req.session.createdAt = new Date().toISOString();
-      req.session.userId = user.id;
-      req.session.metadata = sessionMetadata;
-      req.session.save((err) => {
-        if (err) {
-          return reject(
-            new InternalServerErrorException(
-              'cannot save session,please try again later',
-            ),
-          );
-        }
-
-        resolve(user);
-      });
-    });
+    return saveSession(req, user, sessionMetadata);
   }
 
-  public async logout(req: Request, res: Response) {
-    return new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) {
-          return reject(
-            new InternalServerErrorException(
-              'cannot destroy session, please try again later',
-            ),
-          );
-        }
-
-        req.res?.clearCookie(
-          this.configService.getOrThrow<string>('SESSION_NAME'),
-        );
-        resolve(true);
-      });
-    });
+  public async logout(req: Request) {
+    return destroySession(req, this.configService);
   }
 
   public async clearSession(req: Request) {

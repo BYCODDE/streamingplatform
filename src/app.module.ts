@@ -5,9 +5,11 @@ import { PrismaModule } from './core/prisma/prisma.module';
 import { RedisModule } from './core/redis/redis.module';
 import { AccountModule } from './modules/auth/account/account.module';
 import { SessionModule } from './modules/auth/session/session.module';
+import { MailModule } from './modules/libs/mail/mail.module';
+import { VerificationModule } from './modules/auth/verification/verification.module';
 
 @Module({
-  imports: [PrismaModule, RedisModule, AccountModule, SessionModule],
+  imports: [PrismaModule, RedisModule, AccountModule, SessionModule, MailModule, VerificationModule],
   controllers: [AppController],
   providers: [AppService],
 })
