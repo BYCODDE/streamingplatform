@@ -7,9 +7,10 @@ import { AccountModule } from './modules/auth/account/account.module';
 import { SessionModule } from './modules/auth/session/session.module';
 import { MailModule } from './modules/libs/mail/mail.module';
 import { VerificationModule } from './modules/auth/verification/verification.module';
+import { RecoveryModule } from './modules/auth/recovery/recovery.module';
 
 @Module({
-  imports: [PrismaModule, RedisModule, AccountModule, SessionModule, MailModule, VerificationModule],
+  imports: [PrismaModule, RedisModule, AccountModule, SessionModule, MailModule, VerificationModule, RecoveryModule],
   controllers: [AppController],
   providers: [AppService],
 })
