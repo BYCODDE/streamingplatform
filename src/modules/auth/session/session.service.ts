@@ -4,6 +4,7 @@ import {
   ConflictException,
   NotFoundException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { LoginInput } from './input/login.input';
 import { verify } from 'argon2';
@@ -13,6 +14,7 @@ import { getSessionMetadata } from 'src/shared/utils/session-metadata.util';
 import { RedisService } from 'src/core/redis/redis.service';
 import { destroySession, saveSession } from 'src/shared/utils/session.util';
 import { VerificationService } from '../verification/verification.service';
+import { TOTP } from 'otpauth';
 
 @Injectable()
 export class SessionService {
@@ -75,7 +77,7 @@ export class SessionService {
     input: LoginInput,
     userAgent: string,
   ) {
-    const { login, password } = input;
+    const { login, password, pin } = input;
 
     const user = await this.prisma.user.findFirst({
       where: {
@@ -104,9 +106,35 @@ export class SessionService {
       await this.verificationService.sendVerificationEmail(user);
     }
 
+    if (user.isToptEnabled && user.toptSecret) {
+      if (!pin) {
+        return {
+          message: 'You need to enter your TOPT code',
+        };
+      }
+      const totp = new TOTP({
+        issuer: 'Streaming Platform',
+        label: `${user.email}`,
+        algorithm: 'SHA1',
+        digits: 6,
+        secret: user.toptSecret,
+      });
+
+      const delta = totp.validate({ token: pin });
+
+      if (delta === null) {
+        throw new BadRequestException('Invalid Code');
+      }
+    }
+
     const sessionMetadata = getSessionMetadata(req, userAgent);
 
-    return saveSession(req, user, sessionMetadata);
+    const savedUser = await saveSession(req, user, sessionMetadata);
+
+    return {
+      user: savedUser,
+      message: 'Login successful',
+    };
   }
 
   public async logout(req: Request) {

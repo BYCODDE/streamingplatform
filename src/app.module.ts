@@ -8,9 +8,19 @@ import { SessionModule } from './modules/auth/session/session.module';
 import { MailModule } from './modules/libs/mail/mail.module';
 import { VerificationModule } from './modules/auth/verification/verification.module';
 import { RecoveryModule } from './modules/auth/recovery/recovery.module';
+import { TotpModule } from './modules/auth/totp/totp.module';
 
 @Module({
-  imports: [PrismaModule, RedisModule, AccountModule, SessionModule, MailModule, VerificationModule, RecoveryModule],
+  imports: [
+    PrismaModule,
+    RedisModule,
+    AccountModule,
+    SessionModule,
+    MailModule,
+    VerificationModule,
+    RecoveryModule,
+    TotpModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
