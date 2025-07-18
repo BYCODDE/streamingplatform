@@ -12,6 +12,8 @@ import { MailModule } from '../modules/libs/mail/mail.module';
 import { VerificationModule } from '../modules/auth/verification/verification.module';
 import { RecoveryModule } from '../modules/auth/recovery/recovery.module';
 import { TotpModule } from '../modules/auth/totp/totp.module';
+import { DeactivateModule } from '../modules/auth/deactivate/deactivate.module';
+import { CronModule } from '../modules/cron/cron.module';
 
 @Module({
   imports: [
@@ -29,10 +31,12 @@ import { TotpModule } from '../modules/auth/totp/totp.module';
     RedisModule,
     AccountModule,
     SessionModule,
+    CronModule,
     MailModule,
     VerificationModule,
     RecoveryModule,
     TotpModule,
+    DeactivateModule,
   ],
 })
 export class CoreModule {}

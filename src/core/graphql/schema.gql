@@ -13,6 +13,12 @@ input CreateUserInput {
   username: String!
 }
 
+input DeactivateAccountInput {
+  email: String!
+  password: String!
+  pin: String
+}
+
 type DeviceModel {
   browser: String!
   os: String!
@@ -40,6 +46,7 @@ input LoginInput {
 type Mutation {
   clearSessionCookie: Boolean!
   createUser(data: CreateUserInput!): Boolean!
+  deactivateAccount(data: DeactivateAccountInput!): AuthModel!
   disableTotp: Boolean!
   enableTotp(data: EnableToptInput!): Boolean!
   loginUser(data: LoginInput!): AuthModel!

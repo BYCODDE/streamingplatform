@@ -36,6 +36,11 @@ bio String?
   toptSecret String? @map("topt_secret")
 
 
+  isDeactivated Boolean @default(false) @map("is_deactivated")
+  deactivatedAt DateTime? @map("deactivated_at")
+
+
+
 
   tokens Token[]
 
@@ -73,6 +78,7 @@ model Token{
 enum TokenType {
   EMAIL_VERIFY
   PASSWORD_RESET
+  DEACTIVATE_ACCOUNT
 
   @@map("token_types")
 }

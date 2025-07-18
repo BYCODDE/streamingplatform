@@ -19,6 +19,7 @@ export class LoginInput {
   @Field(() => String, { nullable: true })
   @ValidateIf((o)=> o.pin != undefined)
   @IsString()
+  @IsNotEmpty()
   @Length(6,6)
   public pin?: string;
 }
